@@ -34,8 +34,9 @@ class mainWindow(QMainWindow, UI_MainWindow):
             print("serial not open")
 
     @pyqtSlot()
-    def comLineEdit_editingFinished(self):
+    def on_comLineEdit_editingFinished(self):
         self.com = str(self.comLineEdit.text())
+        print(self.com)
         try:
             self.ser.close()
         except AttributeError:
@@ -46,11 +47,13 @@ class mainWindow(QMainWindow, UI_MainWindow):
             self.ser.isOpen()
             self.ser.flushInput()
             self.ser.flushOutput()
+            print("serial open")
         except:
             self.ser = None
             self.com = 'None'
+            print("Couldn't open serial")
 
-        self.updateValues()
+
 
     @pyqtSlot(int)
     def on_exp1Spin_valueChanged(self, value):

@@ -1,3 +1,3 @@
-call activate plotly
+call activate fluorescence
 python pyFluo.py
 call deactivate
