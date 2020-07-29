@@ -40,7 +40,7 @@
       <item>
        <widget class="QLineEdit" name="comLineEdit">
         <property name="text">
-         <string>COM5</string>
+         <string>COM6</string>
         </property>
        </widget>
       </item>
@@ -263,6 +263,30 @@
      </layout>
     </item>
     <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_13">
+      <item>
+       <widget class="QLabel" name="label_6">
+        <property name="text">
+         <string>Trigger event between</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="eventStartSpinBox"/>
+      </item>
+      <item>
+       <widget class="QLabel" name="label_11">
+        <property name="text">
+         <string>and</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QSpinBox" name="eventEndSpinBox"/>
+      </item>
+     </layout>
+    </item>
+    <item>
      <layout class="QHBoxLayout" name="horizontalLayout_7"/>
     </item>
     <item>
@@ -356,9 +380,9 @@
        </widget>
       </item>
       <item>
-       <widget class="QPushButton" name="Led3pushButton">
+       <widget class="QPushButton" name="eventpushButton">
         <property name="text">
-         <string>LED 3</string>
+         <string>Event</string>
         </property>
        </widget>
       </item>
