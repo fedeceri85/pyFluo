@@ -46,7 +46,7 @@ unsigned long int counter = 0;
 void setup() {
   // initialize digital pin LED_BUILTIN as an output.
   Serial.begin(9600);
-  Serial.setTimeout(100); 
+  Serial.setTimeout(500); 
   pinMode(LED385, OUTPUT);
   pinMode(LED365, OUTPUT);
   pinMode(CAMTRIG, OUTPUT);
@@ -79,18 +79,22 @@ void loop() {
 void blink(){
   // Function that change the state of the LEDs every time an interrupt is reached
   //TODO RESET LED AND STATE IF TIMEOUT REACHED
-  counter +=1;
+
   state =  digitalRead(INTERRUPT_INPUT); //!state;
+  if (state == HIGH){
+      counter +=1;
+  }
  // RESET LED AND STATE IF TIMEOUT REACHED
   if (millis()-previous>5000){ 
       counter = 1;
    }
+   Serial.println(counter);
   previous = millis();
   if (triggerEvent){
       if (counter == eventBegin){
             digitalWrite(EVENT, HIGH);
       }
-      else if (counter == eventEnd){
+      if (counter >= eventEnd){
         digitalWrite(EVENT, LOW);
       }
   }
@@ -119,6 +123,8 @@ void serialEvent() {
     int exp385_2 = Serial.parseInt();
     int intDelay_2 = Serial.parseInt();
     int ifi_2 = Serial.parseInt();
+    int eventBegin_2 = Serial.parseInt();
+    int eventEnd_2 = Serial.parseInt();
     //
     
     Serial.print(state3);
@@ -130,39 +136,60 @@ void serialEvent() {
     Serial.print(intDelay_2);
     Serial.print(' ');
     Serial.print(ifi_2 );
+        Serial.print(' ');
+    Serial.print(eventBegin_2);
+    Serial.print(' ');
+    Serial.print(eventEnd_2 );
     Serial.println(' ');
-    switch (state3){
-      case 1:
-          digitalWrite(LED365, LOW);
-          digitalWrite(LED385, LOW);
-          LED = HIGH;
-          state = LOW;
-          state2 = 0;
-          break;
-        
-      case 2:
-          exp365 = exp365_2;
-          exp385 = exp385_2;
-          intDelay = intDelay_2;
-          ifi = ifi_2;
-          ifiDelay = ifi-exp365-exp385-intDelay;
-          state2 = 1;
-          break;
-     case 3:
-          current = digitalRead(LED365);
-          digitalWrite(LED365, !current);
-          LED = HIGH;
-          state = LOW;
-          state2 = 0;
-          break;
-     case 4:
-          current = digitalRead(LED385);
-          digitalWrite(LED385, !current);
-          LED = HIGH;
-          state = LOW;
-          state2 = 0;
-          break;
-    }
-
+ 
+      switch (state3){
+        case 1:
+            digitalWrite(LED365, LOW);
+            digitalWrite(LED385, LOW);
+            LED = HIGH;
+            state = LOW;
+            state2 = 0;
+            break;
+          
+        case 2:
+            exp365 = exp365_2;
+            exp385 = exp385_2;
+            intDelay = intDelay_2;
+            ifi = ifi_2;
+            ifiDelay = ifi-exp365-exp385-intDelay;
+            state2 = 1;
+            if (eventBegin_2>1){
+              triggerEvent = HIGH;
+              eventBegin = eventBegin_2;
+              eventEnd = eventEnd_2;
+            }
+            else{
+              triggerEvent = LOW;
+              eventBegin = eventBegin_2;
+              eventEnd = eventEnd_2;
+            }
+            
+            break;
+            
+       case 3:
+            current = digitalRead(LED365);
+            digitalWrite(LED365, !current);
+            LED = HIGH;
+            state = LOW;
+            state2 = 0;
+            break;
+       case 4:
+            current = digitalRead(LED385);
+            digitalWrite(LED385, !current);
+            LED = HIGH;
+            state = LOW;
+            state2 = 0;
+            break;
+       case 5:
+            current = digitalRead(EVENT);
+            digitalWrite(EVENT, !current);
+            break;
+      }
+    
   }
 }
