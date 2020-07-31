@@ -104,6 +104,16 @@ class mainWindow(QMainWindow, UI_MainWindow):
         message = "2 "+str(self.exp1)+" "+str(self.exp2)+ " " + str(self.isi) + " " + str(self.ifi) + " " + str(self.eventStart) + " " + str(self.eventEnd) + " "
         self.sendMessage(message)
 
+    @pyqtSlot(int)
+    def on_interruptCheckBox_stateChanged(self,state):
+        if state !=0:
+           message = "7 0 0 0 0 0 0 "
+           self.sendMessage(message)
+
+        else:
+           message = "6 0 0 0 0 0 0 "
+           self.sendMessage(message)
+
     def sendMessage(self, message):
         #message = "0 0 1 0 0 "+str5+" 0 0 0\n"
         message = bytearray(message, encoding='utf8')

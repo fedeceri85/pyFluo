@@ -144,6 +144,7 @@ void serialEvent() {
  
       switch (state3){
         case 1:
+            // Turn everything off
             digitalWrite(LED365, LOW);
             digitalWrite(LED385, LOW);
             LED = HIGH;
@@ -152,6 +153,7 @@ void serialEvent() {
             break;
           
         case 2:
+            // Execute the protocol
             exp365 = exp365_2;
             exp385 = exp385_2;
             intDelay = intDelay_2;
@@ -172,6 +174,7 @@ void serialEvent() {
             break;
             
        case 3:
+              // Turn LED 1 on
             current = digitalRead(LED365);
             digitalWrite(LED365, !current);
             LED = HIGH;
@@ -179,6 +182,7 @@ void serialEvent() {
             state2 = 0;
             break;
        case 4:
+              // Turn LED 2 on
             current = digitalRead(LED385);
             digitalWrite(LED385, !current);
             LED = HIGH;
@@ -186,8 +190,18 @@ void serialEvent() {
             state2 = 0;
             break;
        case 5:
+              // Switch the EVENT pin on or off 
             current = digitalRead(EVENT);
             digitalWrite(EVENT, !current);
+            break;
+       case 6:
+            //Detach interrupts. LEDs are not switched
+            noInterrupts();
+
+            break;
+       case 7:
+            //Reattach interrupts
+            interrupts();
             break;
       }
     
