@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>507</width>
-    <height>710</height>
+    <width>640</width>
+    <height>775</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -70,6 +70,31 @@
        </attribute>
        <layout class="QVBoxLayout" name="verticalLayout">
         <item>
+         <layout class="QHBoxLayout" name="horizontalLayout_12">
+          <item>
+           <widget class="QLabel" name="label_8">
+            <property name="text">
+             <string>Select the LED</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QComboBox" name="LEDcomboBox">
+            <item>
+             <property name="text">
+              <string>LED 1</string>
+             </property>
+            </item>
+            <item>
+             <property name="text">
+              <string>LED 2</string>
+             </property>
+            </item>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item>
          <layout class="QHBoxLayout" name="horizontalLayout_16">
           <item>
            <widget class="QLabel" name="label_13">
@@ -105,9 +130,6 @@
            </widget>
           </item>
          </layout>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_12"/>
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_14">
@@ -175,24 +197,6 @@
         </item>
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_17"/>
-        </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_15">
-          <item>
-           <widget class="QPushButton" name="Led1PushButton_2">
-            <property name="text">
-             <string>LED 1</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="eventpushButton_2">
-            <property name="text">
-             <string>Event</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
         </item>
        </layout>
       </widget>
@@ -376,34 +380,34 @@
         <item>
          <layout class="QHBoxLayout" name="horizontalLayout_10"/>
         </item>
-        <item>
-         <layout class="QHBoxLayout" name="horizontalLayout_3">
-          <item>
-           <widget class="QPushButton" name="Led1PushButton">
-            <property name="text">
-             <string>LED 1</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="Led2PushButton">
-            <property name="text">
-             <string>LED 2</string>
-            </property>
-           </widget>
-          </item>
-          <item>
-           <widget class="QPushButton" name="eventpushButton">
-            <property name="text">
-             <string>Event</string>
-            </property>
-           </widget>
-          </item>
-         </layout>
-        </item>
        </layout>
       </widget>
      </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_3">
+      <item>
+       <widget class="QPushButton" name="Led1PushButton">
+        <property name="text">
+         <string>LED 1</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="Led2PushButton">
+        <property name="text">
+         <string>LED 2</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="eventpushButton">
+        <property name="text">
+         <string>Event</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
     <item>
      <layout class="QHBoxLayout" name="horizontalLayout_18">
@@ -418,6 +422,13 @@
        <widget class="QPushButton" name="blinkPushButton">
         <property name="text">
          <string>Start 2 wavelengths protocol</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="stopButton">
+        <property name="text">
+         <string>Stop</string>
         </property>
        </widget>
       </item>

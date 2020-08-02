@@ -17,11 +17,16 @@ class mainWindow(QMainWindow, UI_MainWindow):
         #Initialise variables
         self.exp1 = 20
         self.exp2 = 15
+        self.exp0 = 20 # wavelength in the 1 wavelength protocol
         self.isi = 100
         self.ifi = 1000
+        self.ifi_1w = 1000 # framerate in the 1 wavelength protocol
+        self.LED_1w = 0 # which led to use in the 1 w protocol. 0-1 : one of the 2 leds
         self.com = 'COM6'
         self.eventStart = 0
+        self.eventStart_1w = 0  # 1 wavelength protocol
         self.eventEnd = 0
+        self.eventEnd_1w = 0   #1 wavelength protocol
         # Try to open serial with defaul value
         try:
             self.ser = serial.Serial(self.com,9600, timeout=5, parity=serial.PARITY_EVEN, rtscts=1)
@@ -120,6 +125,44 @@ class mainWindow(QMainWindow, UI_MainWindow):
         print(message)
         #message = b"0 0 1 0 0 30\n"
         self.ser.write(message)
+
+    @pyqtSlot(bool)
+    def on_stopButton_clicked(self):
+        message =  "1 0 0 0 0 0 0 "
+        self.sendMessage(message)
+        ##########################################################
+        # Part for 1 led#########################################
+    @pyqtSlot(int)
+    def on_LEDcomboBox_currentIndexChanged(self,index):
+        self.LED_1w = index
+
+    @pyqtSlot(int)
+    def on_exp1Spin_2_valueChanged(self, value):
+        self.exp0 = value
+
+    @pyqtSlot(int)
+    def on_ifiSpin_2_valueChanged(self, value):
+        self.ifi_1w = value
+
+    @pyqtSlot(int)
+    def on_eventStartSpinBox_2_valueChanged(self, value):
+        self.eventStart_1w = value
+
+    @pyqtSlot(int)
+    def on_eventEndSpinBox_2_valueChanged(self, value):
+        self.eventEnd_1w = value
+
+    @pyqtSlot(bool)
+    def on_blinkPushButton_2_clicked(self):
+        if self.LED_1w == 0:
+            exp0 = self.exp0
+            exp1 = 0
+        elif self.LED_1w == 1:
+            exp1 = self.exp0
+            exp0 = 0
+        message = "2 "+str(exp0)+" "+str(exp1)+ " " + str(0) + " " + str(self.ifi_1w) + " " + str(self.eventStart_1w)  + " " + str(self.eventEnd_1w) + " "
+        self.sendMessage(message)
+
 
 
 if __name__ == "__main__":

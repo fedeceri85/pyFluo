@@ -36,7 +36,7 @@ int exp385 = 12;
 int intDelay = 20;
 int ifi = 100; // interFrameinterval
 int ifiDelay = ifi-exp365-exp385-intDelay;
-int state2 = 0;
+int state2 = 0; //0 don't to anything. 1: just switch the camera, no leds, 2: switch camera and leds.
 
 int eventBegin = 0;
 int eventEnd = 0;
@@ -46,7 +46,7 @@ unsigned long int counter = 0;
 void setup() {
   // initialize digital pin LED_BUILTIN as an output.
   Serial.begin(9600);
-  Serial.setTimeout(500); 
+  Serial.setTimeout(100); 
   pinMode(LED385, OUTPUT);
   pinMode(LED365, OUTPUT);
   pinMode(CAMTRIG, OUTPUT);
@@ -60,7 +60,7 @@ void setup() {
 // the loop function runs over and over again forever
 void loop() {
 
-   if (state2 ==1){
+   if (state2 >=1){
       LED = HIGH;
       digitalWrite(CAMTRIG, HIGH);// turn the LED on (HIGH is the voltage level)
       delay(exp365);                       // wait for a second
@@ -99,7 +99,7 @@ void blink(){
       }
   }
   // Switch the correct LED on or off.
-  if (state2 ==1){
+  if (state2 >=2){
     if (LED){
   
           digitalWrite(LED365, state);
@@ -150,6 +150,7 @@ void serialEvent() {
             LED = HIGH;
             state = LOW;
             state2 = 0;
+            counter = 0;
             break;
           
         case 2:
@@ -159,7 +160,8 @@ void serialEvent() {
             intDelay = intDelay_2;
             ifi = ifi_2;
             ifiDelay = ifi-exp365-exp385-intDelay;
-            state2 = 1;
+            state2 = 2;
+            counter = 0;
             if (eventBegin_2>1){
               triggerEvent = HIGH;
               eventBegin = eventBegin_2;
@@ -180,6 +182,7 @@ void serialEvent() {
             LED = HIGH;
             state = LOW;
             state2 = 0;
+            counter = 0;
             break;
        case 4:
               // Turn LED 2 on
@@ -188,20 +191,27 @@ void serialEvent() {
             LED = HIGH;
             state = LOW;
             state2 = 0;
+            counter = 0;
             break;
        case 5:
               // Switch the EVENT pin on or off 
             current = digitalRead(EVENT);
             digitalWrite(EVENT, !current);
+            //state2 = 0;
+            //counter = 0;
             break;
+            
        case 6:
             //Detach interrupts. LEDs are not switched
-            noInterrupts();
-
+            //noInterrupts();
+            //detachInterrupt(digitalPinToInterrupt(INTERRUPT_INPUT)) ;
+            state2 = 1;
             break;
        case 7:
             //Reattach interrupts
-            interrupts();
+            //interrupts();
+            //attachInterrupt(digitalPinToInterrupt(INTERRUPT_INPUT), blink, CHANGE);
+            state2 = 2;
             break;
       }
     
