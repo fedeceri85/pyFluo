@@ -27,6 +27,8 @@ class mainWindow(QMainWindow, UI_MainWindow):
         self.eventStart_1w = 0  # 1 wavelength protocol
         self.eventEnd = 0
         self.eventEnd_1w = 0   #1 wavelength protocol
+
+        self.state2 = 2 # 1: only run the camera, 2: run camera and leds
         # Try to open serial with defaul value
         try:
             self.ser = serial.Serial(self.com,9600, timeout=5, parity=serial.PARITY_EVEN, rtscts=1)
@@ -91,36 +93,45 @@ class mainWindow(QMainWindow, UI_MainWindow):
 
     @pyqtSlot(bool)
     def on_Led1PushButton_clicked(self):
-        message = "3 0 0 0 0 0 0 "
+        message = "3 0 0 0 0 0 0 0"
         self.sendMessage(message)
 
     @pyqtSlot(bool)
     def on_Led2PushButton_clicked(self):
-        message = "4 0 0 0 0 0 0 "
+        message = "4 0 0 0 0 0 0 0"
         self.sendMessage(message)
 
     @pyqtSlot(bool)
     def on_eventpushButton_clicked(self):
-        message = "5 0 0 0 0 0 0 "
+        message = "5 0 0 0 0 0 0 0"
         self.sendMessage(message)
 
     @pyqtSlot(bool)
     def on_blinkPushButton_clicked(self):
-        message = "2 "+str(self.exp1)+" "+str(self.exp2)+ " " + str(self.isi) + " " + str(self.ifi) + " " + str(self.eventStart) + " " + str(self.eventEnd) + " "
+        message = "2 "+str(self.exp1)+" "+str(self.exp2) + " " + str(self.isi) + " " + str(self.ifi) + " " + str(self.eventStart) + " " + str(self.eventEnd) + " " + str(self.state2) + " "
         self.sendMessage(message)
 
     @pyqtSlot(int)
     def on_interruptCheckBox_stateChanged(self,state):
         if state !=0:
-           message = "7 0 0 0 0 0 0 "
-           self.sendMessage(message)
+            self.state2 = 2
 
         else:
-           message = "6 0 0 0 0 0 0 "
-           self.sendMessage(message)
+            self.state2 = 1
 
     def sendMessage(self, message):
         #message = "0 0 1 0 0 "+str5+" 0 0 0\n"
+
+        #' the message consists of
+        # 1st: 1: turn off, 2: execute protocol, 3: turn led 1 on, 4: turn led 2 on, 5: turn event pin on
+        # 2nd: led 1 exposure
+        # 3: led 2 exposure
+        #4 : delay bertween two leds
+        #5 : interframe interval (couple of frames if two wavelengths)
+        # 6: event start
+        # 7 event end
+        # 8th: 1 : camera + leds, 2: camera only, 0: none.
+
         message = bytearray(message, encoding='utf8')
         print(message)
         #message = b"0 0 1 0 0 30\n"
@@ -128,7 +139,7 @@ class mainWindow(QMainWindow, UI_MainWindow):
 
     @pyqtSlot(bool)
     def on_stopButton_clicked(self):
-        message =  "1 0 0 0 0 0 0 "
+        message =  "1 0 0 0 0 0 0 0"
         self.sendMessage(message)
         ##########################################################
         # Part for 1 led#########################################
@@ -154,13 +165,14 @@ class mainWindow(QMainWindow, UI_MainWindow):
 
     @pyqtSlot(bool)
     def on_blinkPushButton_2_clicked(self):
+        # Start 1 wavelength protocol
         if self.LED_1w == 0:
             exp0 = self.exp0
             exp1 = 0
         elif self.LED_1w == 1:
             exp1 = self.exp0
             exp0 = 0
-        message = "2 "+str(exp0)+" "+str(exp1)+ " " + str(0) + " " + str(self.ifi_1w) + " " + str(self.eventStart_1w)  + " " + str(self.eventEnd_1w) + " "
+        message = "2 "+str(exp0)+" "+str(exp1)+ " " + str(0) + " " + str(self.ifi_1w) + " " + str(self.eventStart_1w)  + " " + str(self.eventEnd_1w) + " " + str(self.state2) + " "
         self.sendMessage(message)
 
 

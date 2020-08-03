@@ -92,7 +92,7 @@ void blink(){
   if (millis()-previous>5000){ 
       counter = 1;
    }
-   Serial.println(counter);
+   //Serial.println(counter);
   previous = millis();
   if (triggerEvent){
       if (counter == eventBegin){
@@ -129,6 +129,8 @@ void serialEvent() {
     int ifi_2 = Serial.parseInt();
     int eventBegin_2 = Serial.parseInt();
     int eventEnd_2 = Serial.parseInt();
+    int state2_2 = Serial.parseInt(); // variable that switch whether to blink or not the leds.
+    //
     //
     
     Serial.print(state3);
@@ -144,6 +146,8 @@ void serialEvent() {
     Serial.print(eventBegin_2);
     Serial.print(' ');
     Serial.print(eventEnd_2 );
+    Serial.print(' ');
+    Serial.print(state2_2);
     Serial.println(' ');
  
       switch (state3){
@@ -164,7 +168,7 @@ void serialEvent() {
             intDelay = intDelay_2;
             ifi = ifi_2;
             ifiDelay = ifi-exp365-exp385-intDelay;
-            state2 = 2;
+            state2 = state2_2;
             counter = 0;
             if (eventBegin_2>1){
               triggerEvent = HIGH;
@@ -204,19 +208,7 @@ void serialEvent() {
             //state2 = 0;
             //counter = 0;
             break;
-            
-       case 6:
-            //Detach interrupts. LEDs are not switched
-            //noInterrupts();
-            //detachInterrupt(digitalPinToInterrupt(INTERRUPT_INPUT)) ;
-            state2 = 1;
-            break;
-       case 7:
-            //Reattach interrupts
-            //interrupts();
-            //attachInterrupt(digitalPinToInterrupt(INTERRUPT_INPUT), blink, CHANGE);
-            state2 = 2;
-            break;
+
       }
     
   }
