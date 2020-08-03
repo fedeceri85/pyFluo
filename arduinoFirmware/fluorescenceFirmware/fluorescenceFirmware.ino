@@ -61,15 +61,19 @@ void setup() {
 void loop() {
 
    if (state2 >=1){
+    if (exp365>0){
       LED = HIGH;
       digitalWrite(CAMTRIG, HIGH);// turn the LED on (HIGH is the voltage level)
       delay(exp365);                       // wait for a second
       digitalWrite(CAMTRIG, LOW); 
-      delay(intDelay);  
+      delay(intDelay);
+    }
+    if (exp385>0){  
       LED = LOW;  
       digitalWrite(CAMTRIG, HIGH);// turn the LED on (HIGH is the voltage level)
       delay(exp385);                       // wait for a secon
       digitalWrite(CAMTRIG, LOW); 
+    }
       delay(ifiDelay);
   }
   
