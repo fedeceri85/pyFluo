@@ -3,6 +3,7 @@ from PyQt5.QtCore import QObject, pyqtSlot
 from PyQt5 import uic
 import sys
 import serial
+import pandas as pd
 import time
 
 UI_MainWindow = uic.loadUiType('MainWindow.ui')[0] # convert .ui to a type object
@@ -40,6 +41,7 @@ class mainWindow(QMainWindow, UI_MainWindow):
         except:
             self.ser = None
             self.com = 'None'
+            self.comLineEdit.setText('Serial not open')
             print("serial not open")
 
     @pyqtSlot()
@@ -118,6 +120,65 @@ class mainWindow(QMainWindow, UI_MainWindow):
 
         else:
             self.state2 = 1
+
+    @pyqtSlot(bool)
+    def on_saveButton_clicked(self):
+        
+        saveDict = {'exp1':self.exp1,
+        'exp2':self.exp2,
+        'exp0':self.exp0,
+        'isi':self.isi,
+        'ifi':self.ifi,
+        'ifi_1w':self.ifi_1w,
+        'LED_1w':self.LED_1w,
+        'com':self.com,
+        'eventStart':self.eventStart,
+        'eventStart_1w':self.eventStart_1w,
+        'eventEnd':self.eventEnd,
+        'eventEnd_1w':self.eventEnd_1w
+        }
+        df = pd.DataFrame(saveDict,index=[0])
+
+        options = QFileDialog.Options()
+       # options |= QFileDialog.DontUseNativeDialog
+        fileName, _ = QFileDialog.getSaveFileName(self,"QFileDialog.getSaveFileName()","","All Files (*);;CSV file (*.csv)", options=options)
+        if fileName:
+            print(fileName)
+            df.to_csv(fileName)
+
+    @pyqtSlot(bool)
+    def on_loadButton_clicked(self):
+        options = QFileDialog.Options()
+       # options |= QFileDialog.DontUseNativeDialog
+        fileName, _ = QFileDialog.getOpenFileName(self,"QFileDialog.getSaveFileName()","","All Files (*);;CSV file (*.csv)", options=options)
+        if fileName:
+            print(fileName)
+            df = pd.read_csv(fileName)
+            self.exp1 = df['exp1']
+            self.exp2 = df['exp2']
+            self.exp0 = df['exp0']      
+            self.isi = df['isi']
+            self.ifi = df['ifi']
+            self.ifi_1w = df['ifi_1w']
+            self.LED_1w = df['LED_1w']
+            self.com = df['com'].values[0]
+            self.eventStart = df['eventStart']
+            self.eventStart_1w = df['eventStart_1w']
+            self.eventEnd = df['eventEnd']
+            self.eventEnd_1w = df['eventEnd_1w']
+
+            self.exp1Spin.setValue(self.exp1)
+            self.exp2Spin.setValue(self.exp2)
+            self.exp1Spin_2.setValue(self.exp0)
+            self.isiSpin.setValue(self.isi)
+            self.ifiSpin.setValue(self.ifi)
+            self.ifiSpin_2.setValue(self.ifi_1w)
+            self.LEDcomboBox.setCurrentIndex(self.LED_1w)
+            self.comLineEdit.setText(self.com)
+            self.eventStartSpinBox.setValue(self.eventStart)
+            self.eventStartSpinBox_2.setValue(self.eventStart_1w)
+            self.eventEndSpinBox.setValue(self.eventEnd)
+            self.eventEndSpinBox_2.setValue(self.eventEnd_1w)
 
     def sendMessage(self, message):
         #message = "0 0 1 0 0 "+str5+" 0 0 0\n"
